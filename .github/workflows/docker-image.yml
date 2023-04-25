@@ -1,5 +1,7 @@
 name: Push image to ECR
-
+permissions:
+  id-token: write
+  contents: read
 on:
   push:
     branches: [ "main" ]

@@ -3,7 +3,7 @@ Combining the search power of Elasticsearch with the Question Answering power of
 
 Originally based on and forked from this blog
 [Blog - ChatGPT and Elasticsearch: OpenAI meets private data](https://www.elastic.co/blog/chatgpt-elasticsearch-openai-meets-private-data)
- 
+
 
 ![diagram](https://raw.githubusercontent.com/jeffvestal/ElasticDocs_GPT/main/images/ElasticChat%20GPT%20Diagram%20-%20No%20line%20text.jpeg)
 

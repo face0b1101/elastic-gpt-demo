@@ -23,7 +23,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2 # More information on this action can be found below in the 'AWS Credentials' section
         with:
           role-to-assume: arn:aws:iam::461485115270:role/matt-github-gpt-role
-          aws-region: eu-west-2
+          aws-region: us-east-1
 
       - name: Login to Amazon ECR Public
         id: login-ecr-public

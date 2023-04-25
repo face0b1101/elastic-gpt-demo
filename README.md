@@ -1,6 +1,7 @@
-# ElasticDocs_GPT
+# Elastic Chat GPT Demo
 Combining the search power of Elasticsearch with the Question Answering power of GPT
 
+Originally based on and forked from this blog
 [Blog - ChatGPT and Elasticsearch: OpenAI meets private data](https://www.elastic.co/blog/chatgpt-elasticsearch-openai-meets-private-data)
 
 
@@ -19,11 +20,4 @@ Combining the search power of Elasticsearch with the Question Answering power of
 5. Generated response is returned to python
 6. Python adds on original documentation source url to generated response and prints it to the screen for the user
 
-# Examples
-  ![autoscale](https://raw.githubusercontent.com/jeffvestal/ElasticDocs_GPT/main/images/elasticDocs%20GPT%20-%20elastic%20cloud%20autoscaling.png)
-  
-  ![apm](https://raw.githubusercontent.com/jeffvestal/ElasticDocs_GPT/main/images/elasticDocs%20GPT%20-%20elastic%20jvm%20apm.png)
-  
-  ![inference](https://github.com/jeffvestal/ElasticDocs_GPT/blob/main/images/elasticDocs%20GPT%20-%20inference%20processor.png)
-  
-  ![pii](https://raw.githubusercontent.com/jeffvestal/ElasticDocs_GPT/main/images/elasticDocs%20GPT%20-%20redact%20pii.png)
+

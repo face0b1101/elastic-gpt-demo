@@ -1,7 +1,9 @@
 import os
 import streamlit as st
+import streamlit_authenticator as stauth
 import openai
 from elasticsearch import Elasticsearch
+import yaml
 
 # This code is part of an Elastic Blog showing how to combine
 # Elasticsearch's search relevancy power with 
@@ -11,6 +13,15 @@ from elasticsearch import Elasticsearch
 # Code is presented for demo purposes but should not be used in production
 # You may encounter exceptions which are not handled in the code
 
+from yaml.loader import SafeLoader
+with open('./config.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
+authenticator = stauth.Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['preauthorized'])
 
 # Required Environment Variables
 # openai_api - OpenAI API Key
@@ -19,7 +30,41 @@ from elasticsearch import Elasticsearch
 # cloud_pass - Elasticsearch User Password
 
 openai.api_key = os.environ['openai_api']
-model = "gpt-3.5-turbo-0301"
+index = os.getenv('index','search-elastic-docs')
+model = os.getenv('model','gpt-3.5-turbo-0301')
+field = os.getenv('field','title-vector')
+app_name = os.getenv('app_name','ElasticDocs GPT')
+
+def app_main():
+    st.title(app_name)
+
+    # Main chat form
+    with st.form("chat_form"):
+        query = st.text_input("You: ")
+        submit_button = st.form_submit_button("Send")
+
+    # Generate and display response on form submission
+    negResponse = "I'm unable to answer the question based on the information I have from Elastic Docs."
+    if submit_button:
+        resp, url = search(query)
+        prompt = f"Answer this question: {query}\nUsing only the information from this Elastic Doc: {resp}\nIf the answer is not contained in the supplied doc reply '{negResponse}' and nothing else"
+        answer = chat_gpt(prompt)
+        
+        if negResponse in answer:
+            st.write(f"ChatGPT: {answer.strip()}")
+        else:
+            st.write(f"ChatGPT: {answer.strip()}\n\nDocs: {url}")
+
+name, authentication_status, username = authenticator.login('Login', 'main')
+
+if authentication_status:
+    authenticator.logout('Logout', 'main')
+    st.write(f'Welcome *{name}*')
+    app_main()
+elif authentication_status == False:
+    st.error('Username/password is incorrect')
+elif authentication_status == None:
+    st.warning('Please enter your username and password')
 
 # Connect to Elastic Cloud cluster
 def es_connect(cid, user, passwd):
@@ -46,14 +91,14 @@ def search(query_text):
             }],
             "filter": [{
                 "exists": {
-                    "field": "title-vector"
+                    "field": field
                 }
             }]
         }
     }
 
     knn = {
-        "field": "title-vector",
+        "field": field,
         "k": 1,
         "num_candidates": 20,
         "query_vector_builder": {
@@ -66,7 +111,6 @@ def search(query_text):
     }
 
     fields = ["title", "body_content", "url"]
-    index = 'search-elastic-docs'
     resp = es.search(index=index,
                      query=query,
                      knn=knn,
@@ -97,21 +141,3 @@ def chat_gpt(prompt, model="gpt-3.5-turbo", max_tokens=1024, max_context_tokens=
     return response["choices"][0]["message"]["content"]
 
 
-st.title("ElasticDocs GPT")
-
-# Main chat form
-with st.form("chat_form"):
-    query = st.text_input("You: ")
-    submit_button = st.form_submit_button("Send")
-
-# Generate and display response on form submission
-negResponse = "I'm unable to answer the question based on the information I have from Elastic Docs."
-if submit_button:
-    resp, url = search(query)
-    prompt = f"Answer this question: {query}\nUsing only the information from this Elastic Doc: {resp}\nIf the answer is not contained in the supplied doc reply '{negResponse}' and nothing else"
-    answer = chat_gpt(prompt)
-    
-    if negResponse in answer:
-        st.write(f"ChatGPT: {answer.strip()}")
-    else:
-        st.write(f"ChatGPT: {answer.strip()}\n\nDocs: {url}")

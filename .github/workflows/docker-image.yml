@@ -35,7 +35,7 @@ jobs:
           REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
           REGISTRY_ALIAS: r2i8h8s4
           REPOSITORY: elastic-gpt-demo
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: elastic-gpt-demo:latest
         run: |
           docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG

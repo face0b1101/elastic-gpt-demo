@@ -1,0 +1,13 @@
+credentials:
+  usernames:
+    demo:
+      email: matthew.adams@elastic.co
+      name: Demo User
+      password: $2b$12$pjsRW3Tib2zTYw.L/CkbiuQEom3efIdPuZ9n4bh1wGI6LKAJ7AaP2 # To be replaced with hashed password 
+cookie:
+  expiry_days: 30
+  key: blahblahblah # Must be string
+  name: elastic_gpt_demo
+preauthorized:
+  emails:
+  - melsby@gmail.com

@@ -16,6 +16,7 @@ RUN pip3 install -r ./requirements.txt
 
 EXPOSE 8501
 COPY ./elastic_gpt.py .
+COPY ./config.yaml
 
 #HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 

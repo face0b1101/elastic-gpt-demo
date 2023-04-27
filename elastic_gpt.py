@@ -35,36 +35,6 @@ model = os.getenv('model','gpt-3.5-turbo-0301')
 field = os.getenv('field','title-vector')
 app_name = os.getenv('app_name','ElasticDocs GPT')
 
-def app_main():
-    st.title(app_name)
-
-    # Main chat form
-    with st.form("chat_form"):
-        query = st.text_input("You: ")
-        submit_button = st.form_submit_button("Send")
-
-    # Generate and display response on form submission
-    negResponse = "I'm unable to answer the question based on the information I have from Elastic Docs."
-    if submit_button:
-        resp, url = search(query)
-        prompt = f"Answer this question: {query}\nUsing only the information from this Elastic Doc: {resp}\nIf the answer is not contained in the supplied doc reply '{negResponse}' and nothing else"
-        answer = chat_gpt(prompt)
-        
-        if negResponse in answer:
-            st.write(f"ChatGPT: {answer.strip()}")
-        else:
-            st.write(f"ChatGPT: {answer.strip()}\n\nDocs: {url}")
-
-name, authentication_status, username = authenticator.login('Login', 'main')
-
-if authentication_status:
-    authenticator.logout('Logout', 'main')
-    st.write(f'Welcome *{name}*')
-    app_main()
-elif authentication_status == False:
-    st.error('Username/password is incorrect')
-elif authentication_status == None:
-    st.warning('Please enter your username and password')
 
 # Connect to Elastic Cloud cluster
 def es_connect(cid, user, passwd):
@@ -139,5 +109,38 @@ def chat_gpt(prompt, model="gpt-3.5-turbo", max_tokens=1024, max_context_tokens=
                                             messages=[{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": truncated_prompt}])
 
     return response["choices"][0]["message"]["content"]
+
+
+
+def app_main():
+    st.title(app_name)
+
+    # Main chat form
+    with st.form("chat_form"):
+        query = st.text_input("You: ")
+        submit_button = st.form_submit_button("Send")
+
+    # Generate and display response on form submission
+    negResponse = "I'm unable to answer the question based on the information I have from Elastic Docs."
+    if submit_button:
+        resp, url = search(query)
+        prompt = f"Answer this question: {query}\nUsing only the information from this Elastic Doc: {resp}\nIf the answer is not contained in the supplied doc reply '{negResponse}' and nothing else"
+        answer = chat_gpt(prompt)
+        
+        if negResponse in answer:
+            st.write(f"ChatGPT: {answer.strip()}")
+        else:
+            st.write(f"ChatGPT: {answer.strip()}\n\nDocs: {url}")
+
+name, authentication_status, username = authenticator.login('Login', 'main')
+
+if authentication_status:
+    authenticator.logout('Logout', 'main')
+    st.write(f'Welcome *{name}*')
+    app_main()
+elif authentication_status == False:
+    st.error('Username/password is incorrect')
+elif authentication_status == None:
+    st.warning('Please enter your username and password')
 
 

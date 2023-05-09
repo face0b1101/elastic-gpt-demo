@@ -38,6 +38,7 @@ demo_password = os.getenv('demo_password','')
 
 hashed_pass=stauth.Hasher([demo_password]).generate()[0]
 creds=config['credentials']
+creds['usernames']={}
 creds['usernames'][demo_username] = {'password': hashed_pass, 'name': demo_username}
 
 authenticator = stauth.Authenticate(

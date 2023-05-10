@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elastic-gpt
+  labels:
+    app: elastic-gpt
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: elastic-gpt
+  template:
+    metadata:
+      labels:
+        app: elastic-gpt
+    spec:
+      containers:
+      - name: streamlit-webserver
+        image: public.ecr.aws/r2i8h8s4/elastic-gpt-demo:latest
+        ports:
+            - containerPort: 8501
+        imagePullPolicy: Always
+        envFrom:
+        - secretRef:
+            name: elastic-gpt

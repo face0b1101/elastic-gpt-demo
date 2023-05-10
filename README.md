@@ -20,4 +20,18 @@ Originally based on and forked from this blog
 5. Generated response is returned to python
 6. Python adds on original documentation source url to generated response and prints it to the screen for the user
 
+  To make this work for your data. Please set the appropriate environmental variables either through a .env file or through k8s.
+More examples on how to do this will follow.
+  
+  You can run this standalone, in a docker container or in kubernetes
 
+## To run in Docker:
+ 
+ docker build -t elastic-chatgpt .
+
+ cp ./example.env .env
+
+ If you are on Mac cmd+shift+. in finder to view hidden files
+ Edit the env file to add your secrets
+
+ docker run -p --env-file .env 8501:8501 elastic-chatgpt 

@@ -4,3 +4,6 @@
 venv
 main-notokenlimit.py
 .env
+config.yaml
+dist
+.venv
